@@ -32,10 +32,5 @@ To prevent cross-origin resource sharing (CORS) errors, broken image links, or h
 * **Why?** It guarantees 100% loading reliability, infinite scalability without pixelation, and instant rendering.
 * **Dynamic Styling**: By utilizing the CSS `filter` property (specifically `hue-rotate` and `saturate`), the "Sugarfree" and "Tropical" edition cans are dynamically generated from a single base SVG structure, keeping the codebase DRY (Don't Repeat Yourself).
 
-## 🚀 Getting Started
-
-To run this project locally, you don't need any build tools or dependencies.
-
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/yourusername/redbull-landing-page.git](https://github.com/yourusername/redbull-landing-page.git)
+## Name :- Piyush Kumar Dash
+## Registration Number:- 25BAI10103
