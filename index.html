@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Bull | Gives You Wings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === CSS VARIABLES & THEMES === */
+        :root[data-theme="dark"] {
+            --bg-color: #0b0c10;
+            --text-color: #ffffff;
+            --primary-red: #e6002b;
+            --primary-yellow: #ffb800;
+            --primary-blue: #001a35;
+            --card-bg: #1f2833;
+            --nav-bg: rgba(11, 12, 16, 0.9);
+            --spotlight-color: rgba(230, 0, 43, 0.15);
+            --hero-overlay: rgba(11, 12, 16, 0.85); 
+        }
+
+        :root[data-theme="light"] {
+            --bg-color: #f4f4f4;
+            --text-color: #001a35;
+            --primary-red: #e6002b;
+            --primary-yellow: #ffb800;
+            --primary-blue: #001a35;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(244, 244, 244, 0.9);
+            --spotlight-color: rgba(0, 26, 53, 0.1);
+            --hero-overlay: rgba(244, 244, 244, 0.85); 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* === CURSOR SPOTLIGHT === */
+        #spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background: radial-gradient(circle 400px at var(--x, 50vw) var(--y, 50vh), var(--spotlight-color), transparent 80%);
+            z-index: 9999;
+        }
+
+        /* === NAVIGATION === */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span { color: var(--primary-yellow); }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-red);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        .theme-toggle {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* === HERO SECTION === */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 120px 10% 50px;
+            position: relative;
+            overflow: hidden;
+            gap: 40px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('https://picsum.photos/id/1058/1920/1080') no-repeat center center/cover;
+            z-index: -1;
+            will-change: transform;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 5vw, 5rem);
+            font-style: italic;
+            font-weight: 900;
+            line-height: 1.1;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 4px 4px 0px var(--primary-red);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .cta-btn {
+            background-color: var(--primary-red);
+            color: #fff;
+            padding: 15px 40px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 5px;
+            display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(230, 0, 43, 0.4);
+        }
+
+        /* Floating SVG Can Animation */
+        .hero-image {
+            z-index: 2;
+            width: clamp(200px, 30vw, 350px);
+            flex-shrink: 0; 
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 25px 35px rgba(0,0,0,0.8));
+        }
+
+        .svg-can {
+            width: 100%;
+            height: auto;
+            display: block; 
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(5deg); }
+            50% { transform: translateY(-20px) rotate(0deg); }
+            100% { transform: translateY(0px) rotate(5deg); }
+        }
+
+        /* === PRODUCTS SECTION === */
+        .products {
+            padding: 100px 10%;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-style: italic;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            perspective: 1000px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            width: 300px;
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+            cursor: pointer;
+        }
+
+        .card .can-wrapper {
+            height: 250px;
+            margin-bottom: 20px;
+            transform: translateZ(50px);
+            display: flex;
+            justify-content: center;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            transform: translateZ(30px);
+        }
+
+        .sugarfree svg { filter: hue-rotate(180deg) saturate(1.2); }
+        .tropical svg { filter: hue-rotate(60deg) saturate(2) brightness(1.2); }
+
+        /* === EVENT COUNTDOWN SECTION === */
+        .event-section {
+            padding: 100px 10%;
+            background: linear-gradient(rgba(0,26,53,0.9), rgba(230,0,43,0.9)), url('https://picsum.photos/id/164/1920/1080') center/cover fixed;
+            color: white;
+            text-align: center;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 100px;
+            backdrop-filter: blur(5px);
+        }
+
+        .time-box h2 {
+            font-size: 3rem;
+            color: var(--primary-yellow);
+        }
+
+        /* === SCROLL ANIMATIONS === */
+        .hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            padding: 30px;
+            text-align: center;
+            background: var(--card-bg);
+            font-weight: 700;
+        }
+
+        /* === RESPONSIVE FIXES === */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+            }
+            .hero-content { margin: 0 auto; }
+            .hero-image { margin: 0 auto; }
+            nav { flex-direction: column; padding: 15px 20px; gap: 15px; }
+        }
+        @media (max-width: 600px) {
+            .countdown { gap: 15px; }
+            .time-box { min-width: 80px; padding: 15px; }
+            .time-box h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="spotlight"></div>
+
+    <nav>
+        <div class="logo">RED <span>BULL</span></div>
+        <div class="nav-links">
+            <a href="#">Products</a>
+            <a href="#">Athletes</a>
+            <a href="#">Events</a>
+        </div>
+        <button class="theme-toggle" id="theme-btn">Light Mode</button>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg" id="parallax-bg"></div>
+        <div class="hero-content">
+            <h1>Gives You Wings</h1>
+            <p>Vitalizes Body and Mind. Experience the energy that drives the world's most extreme athletes and creators.</p>
+            <a href="#" class="cta-btn">Discover More</a>
+        </div>
+        <div class="hero-image">
+            <!-- FULLY FIXED OVERLAP SVG 1 -->
+            <svg class="svg-can" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 450">
+                <linearGradient id="silverGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#9ca3a8"/><stop offset="25%" stop-color="#e1e5e8"/>
+                    <stop offset="50%" stop-color="#ffffff"/><stop offset="75%" stop-color="#e1e5e8"/>
+                    <stop offset="100%" stop-color="#888c8f"/>
+                </linearGradient>
+                <linearGradient id="blueGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#001838"/><stop offset="50%" stop-color="#004488"/>
+                    <stop offset="100%" stop-color="#001838"/>
+                </linearGradient>
+                <rect x="30" y="40" width="140" height="370" rx="10" fill="url(#silverGrad1)"/>
+                
+                <!-- Adjusted Blue Backgrounds -->
+                <path d="M30 110 L170 70 L170 190 L30 230 Z" fill="url(#blueGrad1)"/>
+                <path d="M30 270 L170 230 L170 380 L30 410 Z" fill="url(#blueGrad1)"/>
+                
+                <!-- Sun & Petals (Shifted UP) -->
+                <circle cx="100" cy="150" r="32" fill="#ffcc00"/>
+                <path d="M 95 140 Q 65 115 45 145 Q 65 175 95 160 Z" fill="#e6002b"/> <!-- Left Petal -->
+                <path d="M 105 140 Q 135 115 155 145 Q 135 175 105 160 Z" fill="#e6002b"/> <!-- Right Petal -->
+                
+                <!-- Text (Shifted DOWN with centered anchor and white stroke) -->
+                <text x="-310" y="95" font-family="'Montserrat', sans-serif" font-size="34" font-weight="900" fill="#e6002b" stroke="#ffffff" stroke-width="1" transform="rotate(-90)" letter-spacing="2" text-anchor="middle">RED BULL</text>
+                <text x="-310" y="115" font-family="'Montserrat', sans-serif" font-size="12" font-weight="bold" fill="#ffffff" transform="rotate(-90)" letter-spacing="1" text-anchor="middle">ENERGY DRINK</text>
+                
+                <rect x="35" y="30" width="130" height="15" rx="5" fill="url(#silverGrad1)"/>
+                <path d="M35 37 A 65 10 0 0 0 165 37" fill="none" stroke="#777" stroke-width="1.5"/>
+                <rect x="35" y="405" width="130" height="15" rx="5" fill="url(#silverGrad1)"/>
+                <path d="M35 412 A 65 10 0 0 0 165 412" fill="none" stroke="#777" stroke-width="1.5"/>
+            </svg>
+        </div>
+    </header>
+
+    <section class="products">
+        <h2 class="section-title hidden">Choose Your Energy</h2>
+        
+        <div class="card-container">
+            <!-- ORIGINAL CAN -->
+            <div class="card hidden">
+                <div class="can-wrapper">
+                    <!-- FULLY FIXED OVERLAP SVG 2 -->
+                    <svg class="svg-can" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 450">
+                        <linearGradient id="silverGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#9ca3a8"/><stop offset="25%" stop-color="#e1e5e8"/>
+                            <stop offset="50%" stop-color="#ffffff"/><stop offset="75%" stop-color="#e1e5e8"/>
+                            <stop offset="100%" stop-color="#888c8f"/>
+                        </linearGradient>
+                        <linearGradient id="blueGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#001838"/><stop offset="50%" stop-color="#004488"/>
+                            <stop offset="100%" stop-color="#001838"/>
+                        </linearGradient>
+                        <rect x="30" y="40" width="140" height="370" rx="10" fill="url(#silverGrad2)"/>
+                        
+                        <path d="M30 110 L170 70 L170 190 L30 230 Z" fill="url(#blueGrad2)"/>
+                        <path d="M30 270 L170 230 L170 380 L30 410 Z" fill="url(#blueGrad2)"/>
+                        
+                        <circle cx="100" cy="150" r="32" fill="#ffcc00"/>
+                        <path d="M 95 140 Q 65 115 45 145 Q 65 175 95 160 Z" fill="#e6002b"/>
+                        <path d="M 105 140 Q 135 115 155 145 Q 135 175 105 160 Z" fill="#e6002b"/>
+                        
+                        <text x="-310" y="95" font-family="'Montserrat', sans-serif" font-size="34" font-weight="900" fill="#e6002b" stroke="#ffffff" stroke-width="1" transform="rotate(-90)" letter-spacing="2" text-anchor="middle">RED BULL</text>
+                        <text x="-310" y="115" font-family="'Montserrat', sans-serif" font-size="12" font-weight="bold" fill="#ffffff" transform="rotate(-90)" letter-spacing="1" text-anchor="middle">ENERGY DRINK</text>
+                        
+                        <rect x="35" y="30" width="130" height="15" rx="5" fill="url(#silverGrad2)"/>
+                        <rect x="35" y="405" width="130" height="15" rx="5" fill="url(#silverGrad2)"/>
+                    </svg>
+                </div>
+                <h3>Original</h3>
+                <p>The classic energy boost.</p>
+            </div>
+            
+            <!-- SUGARFREE CAN -->
+            <div class="card hidden sugarfree">
+                <div class="can-wrapper">
+                    <!-- FULLY FIXED OVERLAP SVG 3 -->
+                    <svg class="svg-can" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 450">
+                        <linearGradient id="silverGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#9ca3a8"/><stop offset="25%" stop-color="#e1e5e8"/>
+                            <stop offset="50%" stop-color="#ffffff"/><stop offset="75%" stop-color="#e1e5e8"/>
+                            <stop offset="100%" stop-color="#888c8f"/>
+                        </linearGradient>
+                        <linearGradient id="blueGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#001838"/><stop offset="50%" stop-color="#004488"/>
+                            <stop offset="100%" stop-color="#001838"/>
+                        </linearGradient>
+                        <rect x="30" y="40" width="140" height="370" rx="10" fill="url(#silverGrad3)"/>
+                        
+                        <path d="M30 110 L170 70 L170 190 L30 230 Z" fill="url(#blueGrad3)"/>
+                        <path d="M30 270 L170 230 L170 380 L30 410 Z" fill="url(#blueGrad3)"/>
+                        
+                        <circle cx="100" cy="150" r="32" fill="#ffcc00"/>
+                        <path d="M 95 140 Q 65 115 45 145 Q 65 175 95 160 Z" fill="#e6002b"/>
+                        <path d="M 105 140 Q 135 115 155 145 Q 135 175 105 160 Z" fill="#e6002b"/>
+                        
+                        <text x="-310" y="95" font-family="'Montserrat', sans-serif" font-size="34" font-weight="900" fill="#e6002b" stroke="#ffffff" stroke-width="1" transform="rotate(-90)" letter-spacing="2" text-anchor="middle">RED BULL</text>
+                        <text x="-310" y="115" font-family="'Montserrat', sans-serif" font-size="12" font-weight="bold" fill="#ffffff" transform="rotate(-90)" letter-spacing="1" text-anchor="middle">ENERGY DRINK</text>
+                        
+                        <rect x="35" y="30" width="130" height="15" rx="5" fill="url(#silverGrad3)"/>
+                        <rect x="35" y="405" width="130" height="15" rx="5" fill="url(#silverGrad3)"/>
+                    </svg>
+                </div>
+                <h3>Sugarfree</h3>
+                <p>Wings without sugar.</p>
+            </div>
+            
+            <!-- TROPICAL CAN -->
+            <div class="card hidden tropical">
+                <div class="can-wrapper">
+                    <!-- FULLY FIXED OVERLAP SVG 4 -->
+                    <svg class="svg-can" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 450">
+                        <linearGradient id="silverGrad4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#9ca3a8"/><stop offset="25%" stop-color="#e1e5e8"/>
+                            <stop offset="50%" stop-color="#ffffff"/><stop offset="75%" stop-color="#e1e5e8"/>
+                            <stop offset="100%" stop-color="#888c8f"/>
+                        </linearGradient>
+                        <linearGradient id="blueGrad4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#001838"/><stop offset="50%" stop-color="#004488"/>
+                            <stop offset="100%" stop-color="#001838"/>
+                        </linearGradient>
+                        <rect x="30" y="40" width="140" height="370" rx="10" fill="url(#silverGrad4)"/>
+                        
+                        <path d="M30 110 L170 70 L170 190 L30 230 Z" fill="url(#blueGrad4)"/>
+                        <path d="M30 270 L170 230 L170 380 L30 410 Z" fill="url(#blueGrad4)"/>
+                        
+                        <circle cx="100" cy="150" r="32" fill="#ffcc00"/>
+                        <path d="M 95 140 Q 65 115 45 145 Q 65 175 95 160 Z" fill="#e6002b"/>
+                        <path d="M 105 140 Q 135 115 155 145 Q 135 175 105 160 Z" fill="#e6002b"/>
+                        
+                        <text x="-310" y="95" font-family="'Montserrat', sans-serif" font-size="34" font-weight="900" fill="#e6002b" stroke="#ffffff" stroke-width="1" transform="rotate(-90)" letter-spacing="2" text-anchor="middle">RED BULL</text>
+                        <text x="-310" y="115" font-family="'Montserrat', sans-serif" font-size="12" font-weight="bold" fill="#ffffff" transform="rotate(-90)" letter-spacing="1" text-anchor="middle">ENERGY DRINK</text>
+                        
+                        <rect x="35" y="30" width="130" height="15" rx="5" fill="url(#silverGrad4)"/>
+                        <rect x="35" y="405" width="130" height="15" rx="5" fill="url(#silverGrad4)"/>
+                    </svg>
+                </div>
+                <h3>Yellow Edition</h3>
+                <p>Tropical fruit flavor.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-section hidden">
+        <h2 class="section-title" style="color: white;">Red Bull Cliff Diving World Series</h2>
+        <p>Prepare for the most extreme event of the year.</p>
+        <div class="countdown">
+            <div class="time-box"><h2 id="days">00</h2><p>Days</p></div>
+            <div class="time-box"><h2 id="hours">00</h2><p>Hours</p></div>
+            <div class="time-box"><h2 id="mins">00</h2><p>Mins</p></div>
+            <div class="time-box"><h2 id="secs">00</h2><p>Secs</p></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Red Bull Landing Page Concept. Gives You Wings.</p>
+    </footer>
+
+    <script>
+        const themeBtn = document.getElementById('theme-btn');
+        const htmlDoc = document.documentElement;
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = htmlDoc.getAttribute('data-theme');
+            if(currentTheme === 'dark') {
+                htmlDoc.setAttribute('data-theme', 'light');
+                themeBtn.innerText = 'Dark Mode';
+            } else {
+                htmlDoc.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = 'Light Mode';
+            }
+        });
+
+        const spotlight = document.getElementById('spotlight');
+        document.addEventListener('mousemove', (e) => {
+            spotlight.style.setProperty('--x', `${e.clientX}px`);
+            spotlight.style.setProperty('--y', `${e.clientY}px`);
+        });
+
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;  
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -15; 
+                const rotateY = ((x - centerX) / centerX) * 15;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.5s ease';
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none'; 
+            });
+        });
+
+        const hiddenElements = document.querySelectorAll('.hidden');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        hiddenElements.forEach((el) => observer.observe(el));
+
+        const parallaxBg = document.getElementById('parallax-bg');
+        window.addEventListener('scroll', () => {
+            let offset = window.pageYOffset;
+            parallaxBg.style.transform = `translateY(${offset * 0.4}px)`;
+        });
+
+        const countDownDate = new Date().getTime() + (7 * 24 * 60 * 60 * 1000); 
+
+        const updateCountdown = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? '0' + days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? '0' + hours : hours;
+            document.getElementById("mins").innerHTML = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById("secs").innerHTML = seconds < 10 ? '0' + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(updateCountdown);
+                document.querySelector(".countdown").innerHTML = "<h2>EVENT HAS STARTED!</h2>";
+            }
+        }, 1000);
+
+    </script>
+</body>
+</html>
