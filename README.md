@@ -2,7 +2,7 @@
 
 A highly interactive, responsive, and fully vanilla frontend landing page concept designed for Red Bull. This project demonstrates advanced CSS animations, 3D transformations, and DOM manipulation without relying on external libraries.
 
-![Red Bull Landing Page Preview]()
+![Red Bull Landing Page Preview](Redbull_Preview.png)
 
 ## ✨ Live Demo
 http://127.0.0.1:5500/index.html
