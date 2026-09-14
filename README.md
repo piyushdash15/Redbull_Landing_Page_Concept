@@ -36,4 +36,5 @@ To prevent cross-origin resource sharing (CORS) errors, broken image links, or h
 ## Registration Number:- 25BAI10103
 
 ## Added Promo Video
-Screen_Recording_.mp4
+<video src="Screen_Recording_.mp4" controls="controls" style="max-width: 100%;">
+</video>
